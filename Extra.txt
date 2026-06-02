@@ -1,0 +1,212 @@
+# MongoDB Filtering Techniques (Employee App Notes)
+
+## 1. Comparison Filters (Numbers)
+
+* **Greater than**
+
+  ```
+  salary: { $gt: 5000 }
+  ```
+
+* **Less than**
+
+  ```
+  salary: { $lt: 5000 }
+  ```
+
+* **Greater than or equal**
+
+  ```
+  salary: { $gte: 5000 }
+  ```
+
+* **Less than or equal**
+
+  ```
+  salary: { $lte: 5000 }
+  ```
+
+---
+
+## 2. Range Filter
+
+* **Salary between 5000 and 10000**
+
+  ```
+  salary: { $gte: 5000, $lte: 10000 }
+  ```
+
+---
+
+## 3. Equality (Exact Match)
+
+* **Filter by Department**
+
+  ```
+  dept: "IT"
+  ```
+
+* **Filter by Designation**
+
+  ```
+  des: "Manager"
+  ```
+
+---
+
+## 4. Multiple Conditions (AND)
+
+* **IT employees with salary > 5000**
+
+  ```
+  {
+    dept: "IT",
+    salary: { $gt: 5000 }
+  }
+  ```
+
+---
+
+## 5. OR Condition
+
+* **Employees in IT OR HR**
+
+  ```
+  {
+    $or: [
+      { dept: "IT" },
+      { dept: "HR" }
+    ]
+  }
+  ```
+
+---
+
+## 6. NOT Condition
+
+* **Salary not equal to 5000**
+
+  ```
+  {
+    salary: { $ne: 5000 }
+  }
+  ```
+
+---
+
+## 7. IN Operator
+
+* **Employees in multiple departments**
+
+  ```
+  {
+    dept: { $in: ["IT", "HR", "Finance"] }
+  }
+  ```
+
+---
+
+## 8. Text Search (Regex)
+
+* **Names starting with 'A' (case insensitive)**
+
+  ```
+  {
+    empName: { $regex: "^A", $options: "i" }
+  }
+  ```
+
+---
+
+## 9. Sorting
+
+* **Highest salary first**
+
+  ```
+  Emp.find().sort({ salary: -1 })
+  ```
+
+* **Lowest salary first**
+
+  ```
+  Emp.find().sort({ salary: 1 })
+  ```
+
+---
+
+## 10. Limit Results
+
+* **Top 5 employees**
+
+  ```
+  Emp.find().limit(5)
+  ```
+
+---
+
+## 11. Combined Query (Real-world Example)
+
+* **IT employees with salary between 5000–10000 sorted by highest salary**
+
+  ```
+  Emp.find({
+    dept: "IT",
+    salary: { $gte: 5000, $lte: 10000 }
+  }).sort({ salary: -1 })
+  ```
+
+---
+
+## 12. Backend Dynamic Filter Route (Express)
+
+```
+app.get('/emp/filter', async (req, res) => {
+  const { dept, min, max } = req.query;
+
+  const filter = {};
+
+  if (dept) filter.dept = dept;
+
+  if (min || max) {
+    filter.salary = {};
+    if (min) filter.salary.$gte = Number(min);
+    if (max) filter.salary.$lte = Number(max);
+  }
+
+  const emps = await Emp.find(filter);
+  res.json(emps);
+});
+```
+
+---
+
+## 13. Frontend API Call Example
+
+```
+axios.get("http://localhost:3000/emp/filter?dept=IT&min=5000&max=10000")
+```
+
+---
+
+## Key Takeaways
+
+* `$gt`, `$lt`, `$gte`, `$lte` → comparisons
+* `$or`, `$and` → multiple conditions
+* `$regex` → search text
+* `.sort()` → ordering
+* `.limit()` → restrict results
+* Combine filters for real-world queries
+
+---
+
+## Recommended Filters for Projects
+
+* Salary greater than a value
+* Salary range
+* Department filter
+* Name search
+* Sorting results
+
+---
+
+This covers all essential filtering techniques for a full-stack Employee Management application.
