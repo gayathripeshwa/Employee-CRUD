@@ -1,0 +1,67 @@
+.message {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 14px;
+    text-align: left;
+}
+
+.message-success {
+    background: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.message-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.message-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    padding: 0 4px;
+}
+
+/* Yes / Cancel buttons used by the delete confirmation */
+.confirm-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.confirm-actions button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.confirm-yes {
+    background: #dc2626;
+    color: white;
+}
+
+.confirm-yes:hover {
+    background: #b91c1c;
+}
+
+.confirm-cancel {
+    background: #e5e7eb;
+    color: #111827;
+}
+
+.confirm-cancel:hover {
+    background: #d1d5db;
+}

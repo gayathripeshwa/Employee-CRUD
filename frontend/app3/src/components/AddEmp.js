@@ -1,13 +1,17 @@
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import api, { errorMessage } from '../api';
+import Message from './Message';
 import './AddEmp.css';
 
 function AddEmp() {
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset } = useForm();
+    const [message, setMessage] = useState(null);
 
     const onSubmit = async (data) => {
+        setMessage(null);
         try {
             await api.post("/emp", {
                 empId: Number(data.empId),
@@ -17,12 +21,17 @@ function AddEmp() {
                 join: data.join
             });
 
-            alert("Employee added successfully!");
+            setMessage({ type: 'success', text: `Employee ${data.empName} added successfully!` });
             reset();
         }
         catch (err) {
-            alert(errorMessage(err, "Error adding employee"));
+            setMessage({ type: 'error', text: errorMessage(err, "Error adding employee") });
         }
+    };
+
+    // Runs instead of onSubmit when a required field is empty.
+    const onInvalid = () => {
+        setMessage({ type: 'error', text: 'Please fill in all fields.' });
     };
 
     return (
@@ -31,7 +40,7 @@ function AddEmp() {
 
                 <h1>Add Employee</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
 
                     <div className="form-group">
                         <input
@@ -69,9 +78,7 @@ function AddEmp() {
                         />
                     </div>
 
-                    {Object.keys(errors).length > 0 && (
-                        <p className="form-error">Please fill in all fields.</p>
-                    )}
+                    <Message message={message} onClose={() => setMessage(null)} />
 
                     <button className="add-btn" type="submit">
                         Add Employee

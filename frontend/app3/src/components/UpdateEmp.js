@@ -2,14 +2,18 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import api, { errorMessage } from '../api';
+import Message from './Message';
 import './UpdateEmp.css';
 
 function UpdateEmp() {
 
     const { register, handleSubmit, reset } = useForm();
     const [result, setResult] = useState(null);
+    const [message, setMessage] = useState(null);
 
     const onSubmit = async (data) => {
+
+        setMessage(null);
 
         try {
 
@@ -22,7 +26,7 @@ function UpdateEmp() {
 
             setResult(res.data);
 
-            alert("Employee updated successfully!");
+            setMessage({ type: 'success', text: 'Employee updated successfully!' });
 
             reset();
 
@@ -30,8 +34,12 @@ function UpdateEmp() {
 
             setResult(null);
 
-            alert(errorMessage(err, "Employee not found"));
+            setMessage({ type: 'error', text: errorMessage(err, "Employee not found") });
         }
+    };
+
+    const onInvalid = () => {
+        setMessage({ type: 'error', text: 'Please enter the Employee ID and the new designation.' });
     };
 
     return (
@@ -41,7 +49,7 @@ function UpdateEmp() {
 
                 <h1>Update Employee</h1>
 
-                <form onSubmit={handleSubmit(onSubmit)}>
+                <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
 
                     <div className="form-group">
                         <input
@@ -57,6 +65,8 @@ function UpdateEmp() {
                             placeholder="New Designation"
                         />
                     </div>
+
+                    <Message message={message} onClose={() => setMessage(null)} />
 
                     <button
                         className="update-btn"

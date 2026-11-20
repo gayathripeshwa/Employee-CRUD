@@ -2,14 +2,17 @@ import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import api, { errorMessage } from '../api';
+import Message from './Message';
 import './SearchEmp.css';
 
 function SearchEmp() {
 
     const { register, handleSubmit } = useForm();
     const [result, setResult] = useState(null);
+    const [message, setMessage] = useState(null);
 
     const onSubmit = async (data) => {
+        setMessage(null);
         try {
             const res = await api.get(
                 `/emp/${data.empId}`
@@ -19,8 +22,13 @@ function SearchEmp() {
         }
         catch (err) {
             setResult(null);
-            alert(errorMessage(err, "Employee not found"));
+            setMessage({ type: 'error', text: errorMessage(err, "Employee not found") });
         }
+    };
+
+    const onInvalid = () => {
+        setResult(null);
+        setMessage({ type: 'error', text: 'Please enter a valid Employee ID.' });
     };
 
     return (
@@ -32,7 +40,7 @@ function SearchEmp() {
 
                 <form
                     className="search-form"
-                    onSubmit={handleSubmit(onSubmit)}
+                    onSubmit={handleSubmit(onSubmit, onInvalid)}
                 >
                     <input
                         {...register("empId", { required: true, min: 1 })}
@@ -44,6 +52,8 @@ function SearchEmp() {
                         Search
                     </button>
                 </form>
+
+                <Message message={message} onClose={() => setMessage(null)} />
 
                 {result && (
                     <div className="result-card">

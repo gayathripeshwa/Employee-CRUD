@@ -3,6 +3,7 @@ import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import api, { errorMessage } from '../api';
 import { useAuth } from '../AuthContext';
+import Message from './Message';
 import './AddEmp.css';
 
 function Register() {
@@ -55,7 +56,10 @@ function Register() {
                         />
                     </div>
 
-                    {error && <p className="form-error">{error}</p>}
+                    <Message
+                        message={error ? { type: 'error', text: error } : null}
+                        onClose={() => setError('')}
+                    />
 
                     <button className="add-btn" type="submit">
                         Register
