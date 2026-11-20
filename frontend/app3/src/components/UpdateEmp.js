@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import axios from 'axios';
+import api, { errorMessage } from '../api';
 import './UpdateEmp.css';
 
 function UpdateEmp() {
@@ -13,8 +13,8 @@ function UpdateEmp() {
 
         try {
 
-            const res = await axios.put(
-                `http://localhost:3000/emp/${data.empId}`,
+            const res = await api.put(
+                `/emp/${data.empId}`,
                 {
                     des: data.des
                 }
@@ -30,7 +30,7 @@ function UpdateEmp() {
 
             setResult(null);
 
-            alert("Employee not found");
+            alert(errorMessage(err, "Employee not found"));
         }
     };
 
@@ -45,14 +45,15 @@ function UpdateEmp() {
 
                     <div className="form-group">
                         <input
-                            {...register("empId")}
+                            {...register("empId", { required: true, min: 1 })}
+                            type="number"
                             placeholder="Employee ID"
                         />
                     </div>
 
                     <div className="form-group">
                         <input
-                            {...register("des")}
+                            {...register("des", { required: true })}
                             placeholder="New Designation"
                         />
                     </div>

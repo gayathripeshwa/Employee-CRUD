@@ -1,15 +1,15 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import axios from 'axios';
+import api, { errorMessage } from '../api';
 import './AddEmp.css';
 
 function AddEmp() {
 
-    const { register, handleSubmit, reset } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
         try {
-            await axios.post("http://localhost:3000/emp", {
+            await api.post("/emp", {
                 empId: Number(data.empId),
                 empName: data.empName,
                 des: data.des,
@@ -21,7 +21,7 @@ function AddEmp() {
             reset();
         }
         catch (err) {
-            alert("Error adding employee");
+            alert(errorMessage(err, "Error adding employee"));
         }
     };
 
@@ -35,28 +35,29 @@ function AddEmp() {
 
                     <div className="form-group">
                         <input
-                            {...register("empId")}
+                            {...register("empId", { required: true, min: 1 })}
+                            type="number"
                             placeholder="Employee ID"
                         />
                     </div>
 
                     <div className="form-group">
                         <input
-                            {...register("empName")}
+                            {...register("empName", { required: true })}
                             placeholder="Employee Name"
                         />
                     </div>
 
                     <div className="form-group">
                         <input
-                            {...register("des")}
+                            {...register("des", { required: true })}
                             placeholder="Designation"
                         />
                     </div>
 
                     <div className="form-group">
                         <input
-                            {...register("dept")}
+                            {...register("dept", { required: true })}
                             placeholder="Department"
                         />
                     </div>
@@ -64,9 +65,13 @@ function AddEmp() {
                     <div className="form-group">
                         <input
                             type="date"
-                            {...register("join")}
+                            {...register("join", { required: true })}
                         />
                     </div>
+
+                    {Object.keys(errors).length > 0 && (
+                        <p className="form-error">Please fill in all fields.</p>
+                    )}
 
                     <button className="add-btn" type="submit">
                         Add Employee
