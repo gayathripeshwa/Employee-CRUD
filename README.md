@@ -20,7 +20,7 @@ frontend/app3/    React app (Create React App)
 ### Backend
 ```bash
 cd backend
-cp .env.example .env      # edit MONGO_URI / PORT if needed
+cp .env.example .env      # set JWT_SECRET; edit MONGO_URI / PORT if needed
 npm install
 npm run dev               # or: npm start
 ```
@@ -35,17 +35,30 @@ npm start
 ```
 The app opens on `http://localhost:3000`.
 
+## Authentication
+
+Login uses **JWT** (JSON Web Tokens) and passwords are hashed with **bcrypt**.
+
+- The **first account you register becomes admin**. Every account after that is a normal user.
+- **Admin:** add, search, update and delete employees.
+- **User:** search only.
+- Set `JWT_SECRET` in `backend/.env`. The server won't start without it.
+
 ## API
 
-| Method | Endpoint    | Body                                      | Description                 |
-|--------|-------------|-------------------------------------------|-----------------------------|
-| POST   | `/emp`      | `{ empId, empName, des, dept, join }`     | Create an employee          |
-| GET    | `/emp/:id`  | –                                         | Get an employee by `empId`  |
-| PUT    | `/emp/:id`  | `{ des }`                                 | Update designation          |
-| DELETE | `/emp/:id`  | –                                         | Delete and return employee  |
+| Method | Endpoint         | Access     | Body                                  | Description                 |
+|--------|------------------|------------|---------------------------------------|-----------------------------|
+| POST   | `/auth/register` | Public     | `{ name, email, password }`           | Create account, returns token |
+| POST   | `/auth/login`    | Public     | `{ email, password }`                 | Log in, returns token       |
+| POST   | `/emp`           | Admin      | `{ empId, empName, des, dept, join }` | Create an employee          |
+| GET    | `/emp/:id`       | Logged in  | –                                     | Get an employee by `empId`  |
+| PUT    | `/emp/:id`       | Admin      | `{ des }`                             | Update designation          |
+| DELETE | `/emp/:id`       | Admin      | –                                     | Delete and return employee  |
+
+Protected routes need the header `Authorization: Bearer <token>`.
 
 Error responses use the shape `{ "error": "message" }`:
-`400` invalid input · `404` not found · `409` duplicate `empId` · `500` server error.
+`400` invalid input · `401` not logged in / bad token · `403` not an admin · `404` not found · `409` duplicate · `500` server error.
 
 ## Tests
 ```bash

@@ -52,3 +52,25 @@
 .card p {
     color: #555;
 }
+.user-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    color: #e2e8f0;
+    margin-bottom: 30px;
+}
+
+.logout-btn {
+    padding: 8px 16px;
+    background: white;
+    color: #1e3a8a;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #e2e8f0;
+}
