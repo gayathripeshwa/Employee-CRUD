@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import axios from 'axios';
+import api, { errorMessage } from '../api';
 import './DeleteEmp.css';
 
 function DeleteEmp() {
@@ -11,10 +11,14 @@ function DeleteEmp() {
 
     const onSubmit = async (data) => {
 
+        if (!window.confirm(`Delete employee ${data.empId}? This cannot be undone.`)) {
+            return;
+        }
+
         try {
 
-            const res = await axios.delete(
-                `http://localhost:3000/emp/${data.empId}`
+            const res = await api.delete(
+                `/emp/${data.empId}`
             );
 
             setResult(res.data);
@@ -27,7 +31,7 @@ function DeleteEmp() {
 
             setResult(null);
 
-            alert("Employee not found");
+            alert(errorMessage(err, "Employee not found"));
         }
     };
 
@@ -46,7 +50,8 @@ function DeleteEmp() {
 
                     <div className="form-group">
                         <input
-                            {...register("empId")}
+                            {...register("empId", { required: true, min: 1 })}
+                            type="number"
                             placeholder="Enter Employee ID"
                         />
                     </div>

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
-import axios from 'axios';
+import api, { errorMessage } from '../api';
 import './SearchEmp.css';
 
 function SearchEmp() {
@@ -11,15 +11,15 @@ function SearchEmp() {
 
     const onSubmit = async (data) => {
         try {
-            const res = await axios.get(
-                `http://localhost:3000/emp/${data.empId}`
+            const res = await api.get(
+                `/emp/${data.empId}`
             );
 
             setResult(res.data);
         }
         catch (err) {
             setResult(null);
-            alert("Employee not found");
+            alert(errorMessage(err, "Employee not found"));
         }
     };
 
@@ -35,7 +35,8 @@ function SearchEmp() {
                     onSubmit={handleSubmit(onSubmit)}
                 >
                     <input
-                        {...register("empId")}
+                        {...register("empId", { required: true, min: 1 })}
+                        type="number"
                         placeholder="Enter Employee ID"
                     />
 
