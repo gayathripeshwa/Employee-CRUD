@@ -1,95 +1,33 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import api, { errorMessage } from '../api';
-import Message from './Message';
-import './AddEmp.css';
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../api';
+import EmployeeForm from './EmployeeForm';
 
 function AddEmp() {
+    const navigate = useNavigate();
 
-    const { register, handleSubmit, reset } = useForm();
-    const [message, setMessage] = useState(null);
-
-    const onSubmit = async (data) => {
-        setMessage(null);
-        try {
-            await api.post("/emp", {
-                empId: Number(data.empId),
-                empName: data.empName,
-                des: data.des,
-                dept: data.dept,
-                join: data.join
-            });
-
-            setMessage({ type: 'success', text: `Employee ${data.empName} added successfully!` });
-            reset();
-        }
-        catch (err) {
-            setMessage({ type: 'error', text: errorMessage(err, "Error adding employee") });
-        }
-    };
-
-    // Runs instead of onSubmit when a required field is empty.
-    const onInvalid = () => {
-        setMessage({ type: 'error', text: 'Please fill in all fields.' });
+    // If this throws (e.g. duplicate ID), EmployeeForm shows the error.
+    const handleAdd = async (data) => {
+        const res = await api.post('/emp', data);
+        // Go to the new employee's profile and show a success message there.
+        navigate(`/employees/${res.data.empId}`, {
+            state: { message: { type: 'success', text: `${res.data.empName} was added.` } }
+        });
     };
 
     return (
-        <div className="add-container">
-            <div className="add-card">
+        <div className="page page-narrow">
+            <Link to="/employees" className="back-link">← Back to directory</Link>
 
-                <h1>Add Employee</h1>
-
-                <form onSubmit={handleSubmit(onSubmit, onInvalid)}>
-
-                    <div className="form-group">
-                        <input
-                            {...register("empId", { required: true, min: 1 })}
-                            type="number"
-                            placeholder="Employee ID"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <input
-                            {...register("empName", { required: true })}
-                            placeholder="Employee Name"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <input
-                            {...register("des", { required: true })}
-                            placeholder="Designation"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <input
-                            {...register("dept", { required: true })}
-                            placeholder="Department"
-                        />
-                    </div>
-
-                    <div className="form-group">
-                        <input
-                            type="date"
-                            {...register("join", { required: true })}
-                        />
-                    </div>
-
-                    <Message message={message} onClose={() => setMessage(null)} />
-
-                    <button className="add-btn" type="submit">
-                        Add Employee
-                    </button>
-
-                </form>
-
-                <div className="home-link">
-                    <Link to="/">← Back to Home</Link>
+            <div className="page-card">
+                <div className="page-header">
+                    <h1>Add Employee</h1>
                 </div>
 
+                <EmployeeForm
+                    onSubmit={handleAdd}
+                    submitLabel="Add Employee"
+                    cancelTo="/employees"
+                />
             </div>
         </div>
     );

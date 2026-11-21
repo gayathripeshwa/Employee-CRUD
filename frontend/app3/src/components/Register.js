@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import api, { errorMessage } from '../api';
 import { useAuth } from '../AuthContext';
 import Message from './Message';
-import './AddEmp.css';
+import './Auth.css';
 
 function Register() {
     const { register, handleSubmit } = useForm();
