@@ -31,37 +31,3 @@
     color: inherit;
     padding: 0 4px;
 }
-
-/* Yes / Cancel buttons used by the delete confirmation */
-.confirm-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 15px;
-}
-
-.confirm-actions button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.confirm-yes {
-    background: #dc2626;
-    color: white;
-}
-
-.confirm-yes:hover {
-    background: #b91c1c;
-}
-
-.confirm-cancel {
-    background: #e5e7eb;
-    color: #111827;
-}
-
-.confirm-cancel:hover {
-    background: #d1d5db;
-}

@@ -1,0 +1,66 @@
+.form-section {
+    margin: 10px 0 12px;
+    color: #374151;
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px 20px;
+    margin-bottom: 22px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 14px;
+    color: #374151;
+}
+
+.field input,
+.field select {
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 15px;
+    background: white;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.field input:focus,
+.field select:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"] {
+    border-color: #dc2626;
+}
+
+.field input:disabled {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.field-error {
+    color: #b91c1c;
+    font-size: 13px;
+}
+
+.field-hint {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}

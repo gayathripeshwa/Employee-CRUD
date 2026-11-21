@@ -1,12 +1,12 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './components/Home';
-import AddEmp from './components/AddEmp';
-import SearchEmp from './components/SearchEmp';
-import UpdateEmp from './components/UpdateEmp';
-import DeleteEmp from './components/DeleteEmp';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import Register from './components/Register';
 import ProtectedRoute from './components/ProtectedRoute';
+import EmployeeList from './components/EmployeeList';
+import EmployeeProfile from './components/EmployeeProfile';
+import AddEmp from './components/AddEmp';
+import EditEmp from './components/EditEmp';
+import './App.css';
 
 function App() {
   return (
@@ -17,13 +17,16 @@ function App() {
         <Route path="/register" element={<Register />} />
 
         {/* Any logged-in user */}
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-        <Route path="/search" element={<ProtectedRoute><SearchEmp /></ProtectedRoute>} />
+        <Route path="/employees" element={<ProtectedRoute><EmployeeList /></ProtectedRoute>} />
+        <Route path="/employees/:id" element={<ProtectedRoute><EmployeeProfile /></ProtectedRoute>} />
 
         {/* Admins only */}
-        <Route path="/add" element={<ProtectedRoute adminOnly><AddEmp /></ProtectedRoute>} />
-        <Route path="/update" element={<ProtectedRoute adminOnly><UpdateEmp /></ProtectedRoute>} />
-        <Route path="/delete" element={<ProtectedRoute adminOnly><DeleteEmp /></ProtectedRoute>} />
+        <Route path="/employees/new" element={<ProtectedRoute adminOnly><AddEmp /></ProtectedRoute>} />
+        <Route path="/employees/:id/edit" element={<ProtectedRoute adminOnly><EditEmp /></ProtectedRoute>} />
+
+        {/* The home page is the directory; unknown addresses go there too */}
+        <Route path="/" element={<Navigate to="/employees" replace />} />
+        <Route path="*" element={<Navigate to="/employees" replace />} />
       </Routes>
     </div>
   );
